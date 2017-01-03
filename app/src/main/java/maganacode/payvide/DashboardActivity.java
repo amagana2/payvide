@@ -22,8 +22,7 @@ public class DashboardActivity extends AppCompatActivity {
     RelativeLayout mActivityDashboard;
     @Bind(R.id.bottom_naviation)
     BottomNavigationView mBottomNavigationView;
-    @Bind(R.id.color_test_button)
-    Button mColorTest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +40,6 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(DashboardActivity.this, PaymentsDateActivity.class);
-                startActivity(i);
-            }
-        });
-
-        mColorTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(DashboardActivity.this, PaymentOptionsActivity.class);
                 startActivity(i);
             }
         });

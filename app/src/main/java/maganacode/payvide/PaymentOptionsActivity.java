@@ -63,6 +63,7 @@ public class PaymentOptionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_options);
         ButterKnife.bind(this);
+        initiateBottomView();
 
         //Get Selected Members
         List<UserList> groupMembers = (List<UserList>) getIntent().getSerializableExtra("users");
@@ -78,9 +79,10 @@ public class PaymentOptionsActivity extends AppCompatActivity {
             member.setName(name);
             member.setEmail(email);
             member.setUsername(username);
-
+            Toast.makeText(this, "Picked: " + member.getName(), Toast.LENGTH_SHORT).show();
             members.add(member); //List<GroupMembers> now has however members were selected.
         }
+
 
         //RecyclerView + Adapter
         mRecyclerview.setHasFixedSize(true);
@@ -142,6 +144,10 @@ public class PaymentOptionsActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    public void initiateBottomView() {
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

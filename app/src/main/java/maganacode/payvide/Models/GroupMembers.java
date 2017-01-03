@@ -10,6 +10,8 @@ public class GroupMembers {
     private String username;
     private String email;
     private String uid;
+    private int percentage;
+    private double amount;
 
     public GroupMembers() {
     }
@@ -19,6 +21,8 @@ public class GroupMembers {
         this.username = username;
         this.email = email;
         this.uid = uid;
+        percentage = 0;
+        amount = 0;
     }
 
     public String getName() {
@@ -51,5 +55,21 @@ public class GroupMembers {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 }

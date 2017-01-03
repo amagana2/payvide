@@ -124,6 +124,7 @@ public class GroupActivity extends AppCompatActivity {
 
         //Unique ID
         String id = mDatabase.child("payvide").getKey();
+
         //Creates new group with name!
         writeNewGroup(allMembers, groupName, id);
     }

@@ -34,7 +34,6 @@ import maganacode.payvide.Models.UserList;
 import maganacode.payvide.adapter.UserAdapter;
 
 public class PaymentsSearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
-
     //TAGs
     private static final String TAG = "PaymentsSearchActivity";
     private static final String user_key = "users";

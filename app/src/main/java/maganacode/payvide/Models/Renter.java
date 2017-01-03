@@ -7,19 +7,26 @@ package maganacode.payvide.Models;
 
 class Renter {
 
-    private User user;
+    private GroupMembers GroupMember;
     private int percent;
+    private double amount;
 
-    public Renter(){
+    public Renter() {
 
     }
 
-    public User getUser() {
-        return user;
+    public Renter(GroupMembers groupMember, int percent, double amount) {
+        GroupMember = groupMember;
+        this.percent = percent;
+        this.amount = amount;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public GroupMembers getGroupMember() {
+        return GroupMember;
+    }
+
+    public void setGroupMember(GroupMembers groupMember) {
+        GroupMember = groupMember;
     }
 
     public int getPercent() {
@@ -30,9 +37,11 @@ class Renter {
         this.percent = percent;
     }
 
-    public Renter(User user, int percent) {
+    public double getAmount() {
+        return amount;
+    }
 
-        this.user = user;
-        this.percent = percent;
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 }

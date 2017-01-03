@@ -104,7 +104,7 @@ public class PaymentsDateActivity extends AppCompatActivity implements CalendarD
         setSupportActionBar(toolbar);
 
         //Menu Navigation Button
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +113,6 @@ public class PaymentsDateActivity extends AppCompatActivity implements CalendarD
                 startActivity(i);
             }
         });
-
     }
 
     //TODO : Link the Bottom Navigation Bar

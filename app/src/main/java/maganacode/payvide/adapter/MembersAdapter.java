@@ -17,7 +17,6 @@ import maganacode.payvide.R;
  * Created by Andrew on 1/2/2017.
  * Adapter for the members
  */
-
 public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHolder> {
     private List<GroupMembers> mMembers;
     private final int TOTAL_AMOUNT = 100; //Max amount for all seekbars.

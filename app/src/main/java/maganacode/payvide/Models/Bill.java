@@ -10,6 +10,7 @@ import java.util.Date;
 
 class Bill {
     private String name;
+    private String uid;
     private Date date;
     private Double cost;
     private String color;
@@ -17,11 +18,11 @@ class Bill {
     private ArrayList<Renter> userPercentage;
 
     public Bill() {
-
     }
 
-    public Bill(String name, Date date, Double cost, String color, String recurrence, ArrayList<Renter> userPercentage) {
+    public Bill(String name, String uid, Date date, Double cost, String color, String recurrence, ArrayList<Renter> userPercentage) {
         this.name = name;
+        this.uid = uid;
         this.date = date;
         this.cost = cost;
         this.color = color;
@@ -75,5 +76,13 @@ class Bill {
 
     public void setUserPercentage(ArrayList<Renter> userPercentage) {
         this.userPercentage = userPercentage;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }
