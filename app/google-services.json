@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "594423155796",
+    "firebase_url": "https://payvide.firebaseio.com",
+    "project_id": "payvide",
+    "storage_bucket": "payvide.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594423155796:android:282dcad7e0bf03b8",
+        "android_client_info": {
+          "package_name": "com.maganacode.payvide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594423155796-49erfd356q7k71hdds6orf6gja2qs865.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCtdJ_5N2MSSjay8BoijYVKduLNGul0E8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

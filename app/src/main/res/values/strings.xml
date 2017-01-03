@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">payvide</string>
+    <string name="hello_world">Hello World!</string>
+    <string name="forgot_password_text">Forgot Password?</string>
+    <string name="register_button_text">Register</string>
+    <string name="login_button_text">Login</string>
+    <string name="logo_content_description">logo</string>
+    <string name="create_account_button_text">Create Account</string>
+    <string name="already_a_member_login_link_text">Already have an account? Login</string>
+    <string name="password_hint">Password</string>
+    <string name="email_hint">Email</string>
+    <string name="name_hint">Name</string>
+    <string name="username_hint_register">Username</string>
+    <string name="email_hint_register">Email</string>
+    <string name="password_hint_register">Password</string>
+    <string name="change_button_text">Change</string>
+    <string name="next_text_view">Next</string>
+
+    <string name="calendar_date_picker_result_values">Year: %1$s\nMonth: %2$s\nDay: %3$s</string>
+    <string name="payment_date_text">Payment</string>
+    <string name="payment_sub_text">date</string>
+    <string name="dash_text">Not assigned to any payments?</string>
+    <string name="dashboard_text">Dashboard</string>
+    <string name="dash_btn_text">Start a new split</string>
+    <string name="email_card_text">Email</string>
+    <string name="name_card_text">Name</string>
+    <string name="username_card_text">Username</string>
+    <string name="create_text">Create</string>
+    <string name="groups_text">Groups</string>
+    <string name="create_view_text">Create</string>
+    <string name="create_text_view">Create</string>
+    <string name="text_groups">Groups</string>
+    <string name="text_dashboard">Dashboard</string>
+    <string name="text_profile">Profile</string>
+    <string name="plus_text_button">+</string>
+    <string name="payment_name_text">Name</string>
+    <string name="payment_cost_text">Cost</string>
+    <string name="payment_color_text">Color</string>
+    <string name="payment_recurrence_text">Recurrence</string>
+
+    <!-- Recurrence Items -->
+    <string name="spinner_title">Choose…</string>
+    <string name="group_name_hint">Group name</string>
+    <string name="profile_page_text">Profile Page</string>
+    <string name="under_construction_text">under construction...</string>
+    <string name="members_text">0 members</string>
+    <string name="group_name_text">Group Name</string>
+    <string name="date_pick_text">Date Pick</string>
+    <string name="divisors_percent_text">Divisors - 100%</string>
+    <string name="test_button">Test Color</string>
+</resources>
