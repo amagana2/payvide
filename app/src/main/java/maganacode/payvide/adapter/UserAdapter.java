@@ -35,7 +35,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
     }
 
-    public UserAdapter(List<UserList> dataSet, String id) {
+    public UserAdapter(List<UserList> dataSet) {
         this.mDataSet = new ArrayList<>(dataSet);
     }
 
@@ -59,7 +59,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 mDataSet.get(holder.getAdapterPosition()).setSelected(b);
             }
         });
-
     }
 
     @Override

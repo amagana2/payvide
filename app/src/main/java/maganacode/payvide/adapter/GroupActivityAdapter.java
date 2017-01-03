@@ -34,11 +34,9 @@ public class GroupActivityAdapter extends RecyclerView.Adapter<GroupActivityAdap
      * Constructor
      *
      * @param dataSet : The members
-     * @param id   : Identifier
      */
-    public GroupActivityAdapter(List<Group> dataSet, String id) {
+    public GroupActivityAdapter(List<Group> dataSet) {
         this.groups = dataSet;
-        this.id = id;
     }
 
     /**
@@ -54,7 +52,7 @@ public class GroupActivityAdapter extends RecyclerView.Adapter<GroupActivityAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Group group = groups.get(position);
-        holder.mGroupName.setText(group.getName()); //TODO: Group Name
+        holder.mGroupName.setText(group.getName());
         holder.mMembers.setText(group.getMembers().size() + " members");
     }
 

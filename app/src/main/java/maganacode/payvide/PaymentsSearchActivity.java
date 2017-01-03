@@ -77,7 +77,7 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
         //RecyclerView + Adapter
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new UserAdapter(mUsers, mID);
+        mAdapter = new UserAdapter(mUsers);
         mRecyclerView.setAdapter(mAdapter);
 
         //Child Listener
@@ -92,7 +92,10 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
                     if (user.isSelected()) {
                         selectedUsers.add(user);
                     }
-                    Intent i = new Intent(PaymentsSearchActivity.this, GroupActivity.class);
+                    //This is for GroupActivity Testing
+                    //Intent i = new Intent(PaymentsSearchActivity.this, GroupActivity.class);
+
+                    Intent i = new Intent(PaymentsSearchActivity.this, PaymentOptionsActivity.class);
                     i.putExtra("users", (Serializable) selectedUsers);
                     i.putExtra("groupName", mGroupName.getText().toString());
                     startActivity(i);

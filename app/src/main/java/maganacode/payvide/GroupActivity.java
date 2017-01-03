@@ -2,7 +2,6 @@ package maganacode.payvide;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -59,9 +58,6 @@ public class GroupActivity extends AppCompatActivity {
     @Bind(R.id.add_group)
     TextView mAddButton;
 
-    //String
-    private String mID;
-
     //Data Conversion
     private String email;
     private String name;
@@ -73,8 +69,6 @@ public class GroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group);
         ButterKnife.bind(this);
         initializeBottomBar();
-
-        mID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         //Users from selected list -- NEW DATA
         List<UserList> groupMembers = (List<UserList>) getIntent().getSerializableExtra("users");
@@ -99,10 +93,10 @@ public class GroupActivity extends AppCompatActivity {
         List<Group> groups = new ArrayList<>();
         groups.add(group);
 
-        //RecyclerView TODO : Create Adapter for GROUP (Currently for all users).
+        //RecyclerView
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(this));
-        GroupActivityAdapter mAdapter = new GroupActivityAdapter(groups, mID);
+        GroupActivityAdapter mAdapter = new GroupActivityAdapter(groups);
         mRecyclerview.setAdapter(mAdapter);
         onGroupCreate(members, groupName);
 

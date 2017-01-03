@@ -1,8 +1,14 @@
 package maganacode.payvide;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,8 +27,11 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import maganacode.payvide.Models.GroupMembers;
+import maganacode.payvide.Models.UserList;
+import maganacode.payvide.adapter.MembersAdapter;
 
-public class PaymentOptions extends AppCompatActivity {
+public class PaymentOptionsActivity extends AppCompatActivity {
 
     @Bind(R.id.name_label)
     TextView mNameLabel;
@@ -42,6 +51,10 @@ public class PaymentOptions extends AppCompatActivity {
     Spinner mRecurrenceSpinner;
     @Bind(R.id.activity_payment_options)
     RelativeLayout mActivityPaymentOptions;
+    @Bind(R.id.members_recycler)
+    RecyclerView mRecyclerview;
+    @Bind(R.id.bottom_naviation)
+    BottomNavigationView mBottomNavigationView;
 
     private int mSelectedColor;
 
@@ -51,6 +64,29 @@ public class PaymentOptions extends AppCompatActivity {
         setContentView(R.layout.activity_payment_options);
         ButterKnife.bind(this);
 
+        //Get Selected Members
+        List<UserList> groupMembers = (List<UserList>) getIntent().getSerializableExtra("users");
+
+        //Convert UserList -> Members
+        List<GroupMembers> members = new ArrayList<>(); //List of Group Members
+        GroupMembers member = new GroupMembers(); //Individual Group Members
+
+        for (UserList users : groupMembers) {
+            String name = users.getName();
+            String email = users.getEmail();
+            String username = users.getUsername();
+            member.setName(name);
+            member.setEmail(email);
+            member.setUsername(username);
+
+            members.add(member); //List<GroupMembers> now has however members were selected.
+        }
+
+        //RecyclerView + Adapter
+        mRecyclerview.setHasFixedSize(true);
+        mRecyclerview.setLayoutManager(new LinearLayoutManager(this));
+        MembersAdapter mAdapter = new MembersAdapter(members);
+        mRecyclerview.setAdapter(mAdapter);
 
         //Spinner
         mRecurrenceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -58,7 +94,7 @@ public class PaymentOptions extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String item = adapterView.getItemAtPosition(i).toString();
                 //Toast
-                Toast.makeText(PaymentOptions.this, "You picked: " + item, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PaymentOptionsActivity.this, "You picked: " + item, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -103,6 +139,30 @@ public class PaymentOptions extends AppCompatActivity {
                     }
                 });
                 dialog.show(getFragmentManager(), "color_dialog_test");
+            }
+        });
+
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent i;
+                switch (item.getItemId()) {
+                    case R.id.action_groups:
+                        //Refresh
+                        i = new Intent(PaymentOptionsActivity.this, PaymentsSearchActivity.class);
+                        startActivity(i);
+                        return true;
+                    case R.id.action_dashboard:
+                        i = new Intent(PaymentOptionsActivity.this, DashboardActivity.class);
+                        startActivity(i);
+                        return true;
+                    case R.id.action_profile:
+                        item.setEnabled(true);
+                        i = new Intent(PaymentOptionsActivity.this, ProfileActivity.class);
+                        startActivity(i);
+                        return true;
+                }
+                return false;
             }
         });
     }

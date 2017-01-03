@@ -2,10 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:design="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_payment_options"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="maganacode.payvide.PaymentOptions">
+    tools:context="maganacode.payvide.PaymentOptionsActivity">
 
     <!-- Name Label -->
     <TextView
@@ -106,4 +107,20 @@
         android:layout_toEndOf="@+id/recurrence_label"
         android:prompt="@string/spinner_title">
     </Spinner>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/members_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/divisors_label"
+        android:layout_above="@+id/bottom_naviation"
+        android:layout_centerHorizontal="true"/>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_naviation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        design:menu="@menu/bottom_navigation_menu">
+    </android.support.design.widget.BottomNavigationView>
 </RelativeLayout>

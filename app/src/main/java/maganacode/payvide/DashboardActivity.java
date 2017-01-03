@@ -48,7 +48,7 @@ public class DashboardActivity extends AppCompatActivity {
         mColorTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(DashboardActivity.this, PaymentOptions.class);
+                Intent i = new Intent(DashboardActivity.this, PaymentOptionsActivity.class);
                 startActivity(i);
             }
         });
