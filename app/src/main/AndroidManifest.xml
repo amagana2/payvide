@@ -51,6 +51,8 @@
         </activity>
         <activity android:name=".PaymentOptionsActivity">
         </activity>
+        <activity android:name=".BillListActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -29,6 +29,7 @@ import maganacode.payvide.Models.Group;
 import maganacode.payvide.Models.GroupMembers;
 import maganacode.payvide.Models.UserList;
 import maganacode.payvide.adapter.GroupActivityAdapter;
+import maganacode.payvide.adapter.RecyclerTouchListener;
 
 public class GroupActivity extends AppCompatActivity {
     //Tag
@@ -99,6 +100,20 @@ public class GroupActivity extends AppCompatActivity {
         GroupActivityAdapter mAdapter = new GroupActivityAdapter(groups);
         mRecyclerview.setAdapter(mAdapter);
         onGroupCreate(members, groupName);
+
+        //OnClick RecyclerView
+        mRecyclerview.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerview, new RecyclerTouchListener.OnItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent i = new Intent(view.getContext(), BillListActivity.class);
+                startActivity(i);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
         //Add new group intent
         mAddButton.setOnClickListener(new View.OnClickListener() {

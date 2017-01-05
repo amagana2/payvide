@@ -18,15 +18,14 @@ import maganacode.payvide.R;
 
 public class GroupActivityAdapter extends RecyclerView.Adapter<GroupActivityAdapter.ViewHolder> {
     private List<Group> groups;
-    private String id;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView mGroupName, mMembers;
+        private TextView mGroupName, mMembers;
 
-        ViewHolder(View v) {
-            super(v);
-            mGroupName = (TextView) v.findViewById(R.id.group_name_textview);
-            mMembers = (TextView) v.findViewById(R.id.members_text_view);
+        ViewHolder(View itemLayoutView) {
+            super(itemLayoutView);
+            mGroupName = (TextView) itemLayoutView.findViewById(R.id.group_name_textview);
+            mMembers = (TextView) itemLayoutView.findViewById(R.id.members_text_view);
         }
     }
 
@@ -47,13 +46,15 @@ public class GroupActivityAdapter extends RecyclerView.Adapter<GroupActivityAdap
     public GroupActivityAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_layout_groups, parent, false);
         return new ViewHolder(v);
+
+
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Group group = groups.get(position);
         holder.mGroupName.setText(group.getName());
-        holder.mMembers.setText(group.getMembers().size() + " members");
+        holder.mMembers.setText("" + group.getMembers().size() + " members");
     }
 
     @Override
