@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +18,13 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.xdty.preference.colorpicker.ColorPickerDialog;
 import org.xdty.preference.colorpicker.ColorPickerSwatch;
@@ -32,6 +39,15 @@ import maganacode.payvide.Models.UserList;
 import maganacode.payvide.adapter.MembersAdapter;
 
 public class PaymentOptionsActivity extends AppCompatActivity {
+
+    //Tag
+    private static String TAG = "PaymentOptionsActivity";
+
+    //Reference
+    DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users");
+
+    //GroupMembers
+    List<UserList> groupMembers = new ArrayList<>();
 
     @Bind(R.id.name_label)
     TextView mNameLabel;
@@ -57,6 +73,10 @@ public class PaymentOptionsActivity extends AppCompatActivity {
     BottomNavigationView mBottomNavigationView;
 
     private int mSelectedColor;
+    private List<GroupMembers> mMembers = new ArrayList<>(); //Group Members in a List.
+    private MembersAdapter mAdapter;
+    private String name;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,38 +85,60 @@ public class PaymentOptionsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initiateBottomView();
 
-        //Get Selected Members
-        List<UserList> groupMembers = (List<UserList>) getIntent().getSerializableExtra("users");
+        //Extra from other activity.
+        groupMembers = (List<UserList>) getIntent().getSerializableExtra("users"); //Selected Members
+
+        //Grab Current User
+        String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference newRef = mRef.child(currentUserID);
+        newRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "Name: " + dataSnapshot.child("name").getValue());
+                Log.d(TAG, "onDataChange: " + groupMembers);
+
+                GroupMembers mCurrentMember = new GroupMembers();
+                name = String.valueOf(dataSnapshot.child("name").getValue());
+                username = String.valueOf(dataSnapshot.child("username").getValue());
+
+                mCurrentMember.setName(name);
+                mCurrentMember.setUsername(username);
+
+                mMembers.add(mCurrentMember);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         //Convert UserList -> Members
-        List<GroupMembers> members = new ArrayList<>(); //List of Group Members
-        GroupMembers member = new GroupMembers(); //Individual Group Members
-
         for (UserList users : groupMembers) {
-            String name = users.getName();
-            String email = users.getEmail();
-            String username = users.getUsername();
-            member.setName(name);
-            member.setEmail(email);
-            member.setUsername(username);
-            Toast.makeText(this, "Picked: " + member.getName(), Toast.LENGTH_SHORT).show();
-            members.add(member); //List<GroupMembers> now has however members were selected.
-        }
+            name = users.getName();
+            username = users.getUsername();
 
+            GroupMembers mGroupMembers = new GroupMembers(); //Individual Group Members
+            mGroupMembers.setName(name);
+            mGroupMembers.setUsername(username);
+
+            //List<GroupMembers> now has however members were selected...
+            mMembers.add(mGroupMembers);
+        }
 
         //RecyclerView + Adapter
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(this));
-        MembersAdapter mAdapter = new MembersAdapter(members);
+        mAdapter = new MembersAdapter(mMembers);
         mRecyclerview.setAdapter(mAdapter);
 
-        //Spinner
+        //Recurrence Spinner
         mRecurrenceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String item = adapterView.getItemAtPosition(i).toString();
-                //Toast
-                Toast.makeText(PaymentOptionsActivity.this, "You picked: " + item, Toast.LENGTH_SHORT).show();
+                String choice = adapterView.getItemAtPosition(i).toString();
+
+                //TODO : Extra for this recurrence.
             }
 
             @Override
@@ -143,8 +185,6 @@ public class PaymentOptionsActivity extends AppCompatActivity {
                 dialog.show(getFragmentManager(), "color_dialog_test");
             }
         });
-
-
     }
 
     public void initiateBottomView() {

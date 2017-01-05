@@ -65,7 +65,6 @@ public class LoginActivity extends AppCompatActivity {
         //Gets the authenticated users.
         mAuth = FirebaseAuth.getInstance();
 
-
         //Auth Listener -- Check if user sign in or not
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -73,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     //User signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in" + user.getUid());
+                    Log.d(TAG, "onAuthStateChanged:signed_in  " + user.getUid());
                 } else {
                     //User signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -133,7 +132,6 @@ public class LoginActivity extends AppCompatActivity {
         String username = mInputEmail.getText().toString();
         String password = mInputPassword.getText().toString();
 
-        // TODO: Implement login authentication -- Firebase
         mAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {

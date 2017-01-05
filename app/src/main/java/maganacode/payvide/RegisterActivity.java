@@ -184,7 +184,7 @@ public class RegisterActivity extends AppCompatActivity {
         //User Info
         String name = mInputName.getText().toString();
         String username = mInputUsername.getText().toString();
-        String uid = mDatabase.child("payvide").getKey();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String profilePic = " ";
 
         //On Auth Success
@@ -196,11 +196,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void writeNewUser(String email, String name, String username, String uid, String profilePic) {
-        String key = mDatabase.child("payvide").push().getKey();
-        User user = new User(email, name, username, key, profilePic);
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        User user = new User(email, name, username, uid, profilePic);
         Map<String, Object> userValues = user.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(key, userValues);
+        childUpdates.put(uid, userValues);
         mDatabase.updateChildren(childUpdates);
     }
 

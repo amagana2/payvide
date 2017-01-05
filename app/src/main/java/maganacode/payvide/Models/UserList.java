@@ -13,6 +13,11 @@ import java.io.Serializable;
 public class UserList implements Serializable {
     public String email;
     public String name;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String username;
     private boolean isSelected = false;
 

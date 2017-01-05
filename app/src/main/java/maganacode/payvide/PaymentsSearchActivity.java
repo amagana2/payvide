@@ -2,7 +2,6 @@ package maganacode.payvide;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.MenuItemCompat;
@@ -45,7 +44,6 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
     //Data
     private List<UserList> mUsers = new ArrayList<>();
     private List<String> mIDs = new ArrayList<>();
-    private String mID;
 
     //Adapter
     private UserAdapter mAdapter;
@@ -70,8 +68,6 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
         ButterKnife.bind(this);
         initializeToolbar();
         initializeBottomBar();
-
-        mID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         //RecyclerView + Adapter
         mRecyclerView.setHasFixedSize(true);
