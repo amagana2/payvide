@@ -14,7 +14,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class DashboardActivity extends AppCompatActivity {
-
+    //Tag
+    private static final String TAG = "Dashboard Activity";
 
     @Bind(R.id.dashButton)
     Button mDashButton;
@@ -23,23 +24,24 @@ public class DashboardActivity extends AppCompatActivity {
     @Bind(R.id.bottom_naviation)
     BottomNavigationView mBottomNavigationView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
 
+        //Todo : Need to make this page hide the textview + button if List<Group> != null
+        //Todo : Dashboard includes GroupName then the bills
+
         //Bottom Bar
         mBottomNavigationView.getMenu().getItem(0).setChecked(false);
         mBottomNavigationView.getMenu().getItem(1).setChecked(true);
         initializeBottomBar();
 
-
         mDashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(DashboardActivity.this, PaymentsDateActivity.class);
+                Intent i = new Intent(DashboardActivity.this, PaymentsSearchActivity.class);
                 startActivity(i);
             }
         });

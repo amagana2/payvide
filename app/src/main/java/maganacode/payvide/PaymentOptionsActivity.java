@@ -43,7 +43,7 @@ public class PaymentOptionsActivity extends AppCompatActivity {
     //Tag
     private static String TAG = "PaymentOptionsActivity";
 
-    //Reference
+    //Reference -- we are at User's
     DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users");
 
     //GroupMembers
@@ -74,7 +74,6 @@ public class PaymentOptionsActivity extends AppCompatActivity {
 
     private int mSelectedColor;
     private List<GroupMembers> mMembers = new ArrayList<>(); //Group Members in a List.
-    private MembersAdapter mAdapter;
     private String name;
     private String username;
 
@@ -95,7 +94,6 @@ public class PaymentOptionsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "Name: " + dataSnapshot.child("name").getValue());
-                Log.d(TAG, "onDataChange: " + groupMembers);
 
                 GroupMembers mCurrentMember = new GroupMembers();
                 name = String.valueOf(dataSnapshot.child("name").getValue());
@@ -103,7 +101,6 @@ public class PaymentOptionsActivity extends AppCompatActivity {
 
                 mCurrentMember.setName(name);
                 mCurrentMember.setUsername(username);
-
                 mMembers.add(mCurrentMember);
             }
 
@@ -129,8 +126,8 @@ public class PaymentOptionsActivity extends AppCompatActivity {
         //RecyclerView + Adapter
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new MembersAdapter(mMembers);
-        mRecyclerview.setAdapter(mAdapter);
+        MembersAdapter adapter = new MembersAdapter(mMembers);
+        mRecyclerview.setAdapter(adapter);
 
         //Recurrence Spinner
         mRecurrenceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

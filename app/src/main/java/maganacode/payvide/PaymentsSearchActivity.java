@@ -35,6 +35,8 @@ import maganacode.payvide.adapter.UserAdapter;
 public class PaymentsSearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     //TAGs
     private static final String TAG = "PaymentsSearchActivity";
+
+    //Extras
     private static final String user_key = "users";
     private static final String group_key = "groupName";
 
@@ -88,9 +90,11 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
                         selectedUsers.add(user);
                     }
                     //This is for GroupActivity Testing
-                    //Intent i = new Intent(PaymentsSearchActivity.this, GroupActivity.class);
+                    Intent i = new Intent(PaymentsSearchActivity.this, GroupActivity.class);
 
-                    Intent i = new Intent(PaymentsSearchActivity.this, PaymentOptionsActivity.class);
+                    //This is for PaymentOptionsTesting
+                    //Intent i = new Intent(PaymentsSearchActivity.this, PaymentOptionsActivity.class);
+
                     i.putExtra("users", (Serializable) selectedUsers);
                     i.putExtra("groupName", mGroupName.getText().toString());
                     startActivity(i);
