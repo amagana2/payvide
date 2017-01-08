@@ -1,7 +1,6 @@
 package maganacode.payvide.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +24,12 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     //Max amount for all seekbars.
     private final int TOTAL_AMOUNT = 100;
     private List<Integer> mAllProgress = new ArrayList<>();
+
+    //List of GroupMembers selected!
     private List<GroupMembers> mMembers;
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView mName, mUsername, mPercent;
+        private TextView mName, mUsername, mPercent, mDivisorTotal;
         private SeekBar mSeekBar;
 
         ViewHolder(View itemView) {
@@ -36,6 +37,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
             mName = (TextView) itemView.findViewById(R.id.name_view_members);
             mUsername = (TextView) itemView.findViewById(R.id.username_view_members);
             mPercent = (TextView) itemView.findViewById(R.id.percent_text);
+            mDivisorTotal = (TextView) itemView.findViewById(R.id.divisors_label);
             mSeekBar = (SeekBar) itemView.findViewById(R.id.percent_seekbar);
         }
     }
@@ -66,8 +68,6 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
             mAllProgress.add(0);
         }
 
-        Log.d(TAG, "onBindViewHolder: " + mAllProgress.size());
-
         //SeekBar Listener
         holder.mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -77,6 +77,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
                 //Stored progress (where is it at...)
                 int storedProgress = mAllProgress.get(which);
+
                 /**Two cases can occur: User goes left or right with the thumb.
                  * If RIGHT, we must check how much he's allowed to go in that
                  * direction (based on other seekbars), and stop him before it's
@@ -106,7 +107,6 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
                 switch (id) {
                     case R.id.percent_seekbar:
                         holder.mPercent.setText(" " + progress + "%");
-                        //This should return the SeekBars position out of however many seekbars there are.
                         return holder.getAdapterPosition();
                     default:
                         throw new IllegalStateException(

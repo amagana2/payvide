@@ -16,12 +16,15 @@
     <string name="change_button_text">Change</string>
     <string name="next_text_view">Next</string>
 
+    <!-- Date -->
     <string name="calendar_date_picker_result_values">Year: %1$s\nMonth: %2$s\nDay: %3$s</string>
     <string name="payment_date_text">Payment</string>
     <string name="payment_sub_text">date</string>
+
+    <!-- Activities -->
     <string name="dash_text">Not assigned to any payments?</string>
     <string name="dashboard_text">Dashboard</string>
-    <string name="dash_btn_text">Start a new split</string>
+    <string name="dash_btn_text">Create Group</string>
     <string name="email_card_text">Email</string>
     <string name="name_card_text">Name</string>
     <string name="username_card_text">Username</string>
@@ -49,4 +52,6 @@
     <string name="divisors_percent_text">Divisors - 100%</string>
     <string name="test_button">Test Color</string>
     <string name="percent_text">0%</string>
+    <string name="join_button_text">Join</string>
+    <string name="reject_button_text">Reject</string>
 </resources>

@@ -53,6 +53,8 @@
         </activity>
         <activity android:name=".BillListActivity">
         </activity>
+        <activity android:name=".GroupInviteActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -18,9 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/selector_row"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:clickable="true">
 
             <TextView
                 android:id="@+id/members_text_view"

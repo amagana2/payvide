@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,16 +38,12 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
     //TAGs
     private static final String TAG = "PaymentsSearchActivity";
 
-    //Extras
-    private static final String user_key = "users";
-    private static final String group_key = "groupName";
-
     //Firebase Database
-    private DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("users");
+    private DatabaseReference mReference;
 
     //Data
     private List<UserList> mUsers = new ArrayList<>();
-    private List<String> mIDs = new ArrayList<>();
+    private List<UserList> selectedUsers = new ArrayList<>();
 
     //Adapter
     private UserAdapter mAdapter;
@@ -84,15 +82,15 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
         mCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<UserList> selectedUsers = new ArrayList<>();
                 for (UserList user : mUsers) {
                     if (user.isSelected()) {
                         selectedUsers.add(user);
                     }
+
                     //This is for GroupActivity Testing
                     Intent i = new Intent(PaymentsSearchActivity.this, GroupActivity.class);
 
-                    //This is for PaymentOptionsTesting
+                    //This is for PaymentOptionsTesting -- Completed
                     //Intent i = new Intent(PaymentsSearchActivity.this, PaymentOptionsActivity.class);
 
                     i.putExtra("users", (Serializable) selectedUsers);
@@ -152,13 +150,17 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
 
     //ChildListeners
     public void childListeners() {
+        mReference = FirebaseDatabase.getInstance().getReference("users");
         mReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //Clear data before adding new ones.
                 UserList user = dataSnapshot.getValue(UserList.class);
-                mIDs.add(dataSnapshot.getKey());
-                mUsers.add(user);
+
+                //Removes the current user from the search!
+                if (!Objects.equals(user.getUid(), FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    mUsers.add(user);
+                }
             }
 
             @Override

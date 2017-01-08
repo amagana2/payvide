@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,12 +40,11 @@ import maganacode.payvide.Models.UserList;
 import maganacode.payvide.adapter.MembersAdapter;
 
 public class PaymentOptionsActivity extends AppCompatActivity {
-
     //Tag
     private static String TAG = "PaymentOptionsActivity";
 
     //Reference -- we are at User's
-    DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users");
+    DatabaseReference mRef;
 
     //GroupMembers
     List<UserList> groupMembers = new ArrayList<>();
@@ -76,6 +76,7 @@ public class PaymentOptionsActivity extends AppCompatActivity {
     private List<GroupMembers> mMembers = new ArrayList<>(); //Group Members in a List.
     private String name;
     private String username;
+    private String currentUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +88,11 @@ public class PaymentOptionsActivity extends AppCompatActivity {
         //Extra from other activity.
         groupMembers = (List<UserList>) getIntent().getSerializableExtra("users"); //Selected Members
 
-        //Grab Current User
-        String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        /**
+         * Grabs the current user from their ID since it matches the database.
+         */
+        currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mRef = FirebaseDatabase.getInstance().getReference().child("users");
         DatabaseReference newRef = mRef.child(currentUserID);
         newRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -96,11 +100,13 @@ public class PaymentOptionsActivity extends AppCompatActivity {
                 Log.d(TAG, "Name: " + dataSnapshot.child("name").getValue());
 
                 GroupMembers mCurrentMember = new GroupMembers();
+
                 name = String.valueOf(dataSnapshot.child("name").getValue());
                 username = String.valueOf(dataSnapshot.child("username").getValue());
 
                 mCurrentMember.setName(name);
                 mCurrentMember.setUsername(username);
+
                 mMembers.add(mCurrentMember);
             }
 
@@ -119,7 +125,7 @@ public class PaymentOptionsActivity extends AppCompatActivity {
             mGroupMembers.setName(name);
             mGroupMembers.setUsername(username);
 
-            //List<GroupMembers> now has however members were selected...
+            //List<GroupMembers> now has however members were selected
             mMembers.add(mGroupMembers);
         }
 
@@ -134,7 +140,7 @@ public class PaymentOptionsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String choice = adapterView.getItemAtPosition(i).toString();
-
+                Toast.makeText(PaymentOptionsActivity.this, "Recurrence: " + choice, Toast.LENGTH_SHORT).show();
                 //TODO : Extra for this recurrence.
             }
 
@@ -182,6 +188,11 @@ public class PaymentOptionsActivity extends AppCompatActivity {
                 dialog.show(getFragmentManager(), "color_dialog_test");
             }
         });
+    }
+
+    public void onBackPressed() {
+        // Disable going back -- Goes to the home screen.
+        moveTaskToBack(true);
     }
 
     public void initiateBottomView() {

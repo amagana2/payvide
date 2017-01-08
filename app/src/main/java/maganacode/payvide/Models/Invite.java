@@ -2,6 +2,7 @@ package maganacode.payvide.Models;
 
 /**
  * Created by Andrew on 1/3/2017.
+ * Invitation of the group.
  */
 
 public class Invite {

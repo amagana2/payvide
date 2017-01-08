@@ -188,15 +188,15 @@ public class RegisterActivity extends AppCompatActivity {
         String profilePic = " ";
 
         //On Auth Success
-        writeNewUser(user.getEmail(), name, username, uid, profilePic);
+        writeNewUser(user.getEmail(), name, username, profilePic);
 
         //Start new activity
         startActivity(new Intent(RegisterActivity.this, DashboardActivity.class));
         finish();
     }
 
-    private void writeNewUser(String email, String name, String username, String uid, String profilePic) {
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private void writeNewUser(String email, String name, String username, String profilePic) {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         User user = new User(email, name, username, uid, profilePic);
         Map<String, Object> userValues = user.toMap();
         Map<String, Object> childUpdates = new HashMap<>();

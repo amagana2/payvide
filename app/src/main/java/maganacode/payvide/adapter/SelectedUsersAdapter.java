@@ -6,10 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import maganacode.payvide.Models.Group;
+import maganacode.payvide.Models.SelectedUsers;
 import maganacode.payvide.R;
 
 /**
@@ -17,9 +16,8 @@ import maganacode.payvide.R;
  * Adapter for the groups.
  */
 
-public class GroupActivityAdapter extends RecyclerView.Adapter<GroupActivityAdapter.ViewHolder> {
-
-    private List<Group> selectedUsers;
+public class SelectedUsersAdapter extends RecyclerView.Adapter<SelectedUsersAdapter.ViewHolder> {
+    private List<SelectedUsers> selectedUsers;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mGroupName, mMembers;
@@ -36,8 +34,8 @@ public class GroupActivityAdapter extends RecyclerView.Adapter<GroupActivityAdap
      *
      * @param dataSet : The members
      */
-    public GroupActivityAdapter(List<Group> dataSet) {
-        this.selectedUsers = new ArrayList<>(dataSet);
+    public SelectedUsersAdapter(List<SelectedUsers> dataSet) {
+        this.selectedUsers = dataSet;
     }
 
     /**
@@ -45,7 +43,7 @@ public class GroupActivityAdapter extends RecyclerView.Adapter<GroupActivityAdap
      * Need to inflate the row_layout.
      **/
     @Override
-    public GroupActivityAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SelectedUsersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_layout_groups, parent, false);
         return new ViewHolder(v);
     }
@@ -53,8 +51,8 @@ public class GroupActivityAdapter extends RecyclerView.Adapter<GroupActivityAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         //TODO : Possible delete if groupName works.
-        Group group = selectedUsers.get(position);
-        holder.mGroupName.setText(group.getName());
+        SelectedUsers group = selectedUsers.get(position);
+        holder.mGroupName.setText(group.getGroupName());
         holder.mMembers.setText("" + getItemCount() + " members");
     }
 
