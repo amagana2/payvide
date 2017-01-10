@@ -78,6 +78,7 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
         //Child Listener
         childListeners();
 
+
         //NewActivity
         mCreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +93,9 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
 
                     //This is for PaymentOptionsTesting -- Completed
                     //Intent i = new Intent(PaymentsSearchActivity.this, PaymentOptionsActivity.class);
+
+                    //Testing
+                    //Intent i = new Intent(PaymentsSearchActivity.this,TestActivity.class);
 
                     i.putExtra("users", (Serializable) selectedUsers);
                     i.putExtra("groupName", mGroupName.getText().toString());

@@ -3,6 +3,7 @@ package maganacode.payvide.Models;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Map;
  */
 
 @IgnoreExtraProperties
-public class Group {
+public class Group implements Serializable {
     private String name; //groupName;
     private String uid; //unique identifier for group.
     private List<GroupMembers> members; //the members of group

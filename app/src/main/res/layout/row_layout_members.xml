@@ -3,16 +3,15 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-    >
+                android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/primary"
+        app:cardBackgroundColor="@color/bpTransparent"
         app:cardElevation="2dp"
-        app:cardUseCompatPadding="true"
-        app:cardBackgroundColor="@color/bpTransparent">
+        app:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -60,14 +59,14 @@
 
             <SeekBar
                 android:id="@+id/percent_seekbar"
-                android:max="100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/percent_text"
-                android:layout_marginStart="75dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginStart="75dp"
                 android:layout_toEndOf="@+id/username_view_members"
-                android:layout_toStartOf="@+id/percent_text"/>
+                android:layout_toStartOf="@+id/percent_text"
+                android:max="100"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

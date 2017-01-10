@@ -55,7 +55,7 @@ public class GroupActivityAdapter extends RecyclerView.Adapter<GroupActivityAdap
         //TODO : Possible delete if groupName works.
         Group group = selectedUsers.get(position);
         holder.mGroupName.setText(group.getName());
-        holder.mMembers.setText("" + getItemCount() + " members");
+        holder.mMembers.setText("" + group.getMembers().size() + " members");
     }
 
     @Override

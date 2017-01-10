@@ -2,7 +2,6 @@ package maganacode.payvide;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,27 +42,20 @@ public class GroupActivity extends AppCompatActivity {
     //Tag
     private static String TAG = "GroupActivity";
 
+    //RecyclerView Items
+    private static String LIST_EXTRA = "Groups";
+
     //Handler
-    private Handler mHandler;
+    private String currentUserID;
 
-    //Firebase
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference mDatabase = database.getReference("users").child("groups");//Users -> Groups
-    private DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users");
-    private String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    private DatabaseReference newRef = mRef.child(currentUserID);
-    private DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-    private String groupID = ref.child(currentUserID).child("groups").push().getKey();
-
-    //Data Conversion
-    private String email;
-    private String name;
-    private String username;
-    private String ID;
+    //Declarations
+    private String UID = null;
+    private Group selectedGroup;
     private String groupName;
-    private List<GroupMembers> members = new ArrayList<>(); //List of Group Members
+    private List<GroupMembers> mGroupMembers = new ArrayList<>(); //List of Group Members
     private List<UserList> selectedUsers = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
+    private GroupActivityAdapter mAdapter;
 
     //Butterknife Injections
     @Bind(R.id.toolbar)
@@ -91,57 +84,56 @@ public class GroupActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initializeBottomBar();
 
+        //Grab the data if there is any!
+        if (savedInstanceState != null) {
+            Group loadGroups = (Group) savedInstanceState.getSerializable("Groups");
+            groups.add(loadGroups);
+            mAdapter.notifyDataSetChanged();
+
+        }
+
         //Users from selected list -- NEW DATA
         selectedUsers = (List<UserList>) getIntent().getSerializableExtra("users");
         groupName = getIntent().getStringExtra("groupName");
 
-        //Create Group from GroupMembers
-        Group group = new Group(members, groupName, mDatabase.child("payvide").getKey());
-        groups.add(group);
-
-        //Convert UserList -> GroupMembers
-        for (UserList users : selectedUsers) {
-            //Grab their information
-            name = users.getName();
-            email = users.getEmail();
-            username = users.getUsername();
-            ID = users.getUid();
-
-            //GroupMember Object.
-            GroupMembers member = new GroupMembers(); //Individual Group Members
-
-            //Write the member.
-            member.setName(name);
-            member.setEmail(email);
-            member.setUsername(username);
-            member.setUid(ID);
-
-            //Add to the List of GroupMembers
-            members.add(member); //List<GroupMembers> now has however members were selected.
-        }
-
-        //Todo : Write current user + admin to Firebase.
-        writeNewGroup(members, groupName, groupID);
+        selectedGroup = new Group(mGroupMembers, groupName, UID);
+        groups.add(selectedGroup);
 
         //Current User
+        currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users");
+        DatabaseReference newRef = mRef.child(currentUserID);
         newRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "Name: " + dataSnapshot.child("name").getValue());
+                UserList user = dataSnapshot.getValue(UserList.class);
 
-                GroupMembers mCurrent = new GroupMembers();
+                //If the current user...
+                if (Objects.equals(user.getUid(), currentUserID)) {
+                    selectedUsers.add(user);
 
-                //Write the member.
-                mCurrent.setName(String.valueOf(dataSnapshot.child("name").getValue()));
-                mCurrent.setEmail(String.valueOf(dataSnapshot.child("email").getValue()));
-                mCurrent.setUsername(String.valueOf(dataSnapshot.child("username").getValue()));
-                mCurrent.setUid(currentUserID);
+                    //Picked user.
+                    for (UserList selected : selectedUsers) {
+                        GroupMembers selectedMember = new GroupMembers();
 
-                members.add(mCurrent);
+                        selectedMember.setName(selected.getName());
+                        selectedMember.setUsername(selected.getUsername());
+                        selectedMember.setEmail(selected.getEmail());
+                        selectedMember.setUid(selected.getUid());
 
-                //Unique ID
-                String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                        mGroupMembers.add(selectedMember);
+                    }
+                }
+
+                //RecyclerView
+                mRecyclerview.setHasFixedSize(true);
+                mRecyclerview.setLayoutManager(new LinearLayoutManager(GroupActivity.this));
+                mAdapter = new GroupActivityAdapter(groups);
+                mRecyclerview.setAdapter(mAdapter);
+
+                //Todo : Write current user + admin to Firebase.
+                writeNewGroup(mGroupMembers, groupName);
             }
 
             @Override
@@ -149,13 +141,6 @@ public class GroupActivity extends AppCompatActivity {
 
             }
         });
-
-        //RecyclerView
-        mRecyclerview.setHasFixedSize(true);
-        mRecyclerview.setLayoutManager(new LinearLayoutManager(GroupActivity.this));
-        GroupActivityAdapter mAdapter = new GroupActivityAdapter(groups);
-        mRecyclerview.setAdapter(mAdapter);
-
 
         //OnClick RecyclerView
         mRecyclerview.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
@@ -201,70 +186,94 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("Groups", selectedGroup);
+    }
+
+    @Override
     public void onBackPressed() {
         // Disable going back -- Goes to the home screen.
         moveTaskToBack(true);
     }
 
-    private void writeNewGroup(List<GroupMembers> members, String name, String uid) {
+    private void writeNewGroup(List<GroupMembers> members, String name) {
         //Current User ID
         String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        //Selected User ID
-        String selectedID = null;
-        for (GroupMembers selected : members) {
-            selectedID = selected.getUid();
-        }
-
-        //Group Name & ID
-        Map<String, Object> groupNameAndID = new HashMap<>();
-        groupNameAndID.put("name", name);
-        groupNameAndID.put("uid", uid);
 
         //Unique ID for the group.
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         String uniqueKey = ref.child(currentUser).child("groups").push().getKey();
 
-        //Where in the DB should "Group" be created?
-        //TODO: CurrentUser Reference
-        DatabaseReference mDatabaseReference = database.getReference("users").child(currentUser).child("groups");
+        //Group Name & ID
+        Map<String, Object> groupNameAndID = new HashMap<>();
+        groupNameAndID.put("name", name);
+        groupNameAndID.put("uid", uniqueKey);
 
         //Where in the DB should "Group" be created?
-        //TODO: Members Reference
-        DatabaseReference mDatabaseRefMemb = database.getReference("users").child(selectedID).child("invites").child(uniqueKey).child("members");
+        //TODO: CurrentUser Reference
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = database.getReference("users").child(currentUser).child("groups").child(uniqueKey).child("members");
 
         //Picked Member.
         Map<String, Object> currentDict = new HashMap<>();
+        Map<String, Object> pickedDict = new HashMap<>();
 
-        //How 'members' will look.
-        for (GroupMembers memb : members) {
-            currentDict.put("name", memb.getName());
-            currentDict.put("username", memb.getUsername());
-            currentDict.put("email", memb.getEmail());
-            currentDict.put("uid", memb.getUid());
-            currentDict.put("joined", false);
-            currentDict.put("admin", false);
-
+        for (GroupMembers selected : members) {
+            String selectedID = selected.getUid();
             //Non Admin Members
-            if (selectedID != currentUser) {
-                currentDict.put("joined", false);
-                currentDict.put("admin", false);
+            if (!Objects.equals(selectedID, currentUser)) {
 
                 Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put(selectedID, currentDict);
                 ref.child("users").child(selectedID).child("invites").child(uniqueKey).setValue(groupNameAndID);
-                mDatabaseRefMemb.updateChildren(childUpdates);
 
-            } //Selected uID != currentID
-            else {
-                currentDict.put("joined", true);
-                currentDict.put("admin", true);
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put(currentUser, currentDict);
+                //How 'members' will look.
+                for (GroupMembers picked : members) {
+                    pickedDict.put("name", picked.getName());
+                    pickedDict.put("username", picked.getUsername());
+                    pickedDict.put("email", picked.getEmail());
+                    pickedDict.put("uid", picked.getUid());
+                    pickedDict.put("joined", false);
+                    pickedDict.put("admin", false);
+
+                    Log.d(TAG, "Picked: " + picked.getName());
+
+                    if (Objects.equals(picked.getUid(), currentUserID)) {
+                        pickedDict.put("joined", true);
+                        pickedDict.put("admin", true);
+                    }
+
+                    //Where in the DB should "Group" be created?
+                    //TODO: Members Reference
+                    //Member's Reference
+                    DatabaseReference mDatabaseRefMemb = database.getReference("users")
+                            .child(selectedID).child("invites").child(uniqueKey).child("members");
+                    childUpdates.put(picked.getUid(), pickedDict);
+                    mDatabaseRefMemb.updateChildren(childUpdates);
+                }
+            } else {
+
+                //Current User
                 ref.child("users").child(selectedID).child("groups").child(uniqueKey).setValue(groupNameAndID);
-                mDatabaseReference.updateChildren(childUpdates);
+
+                for (GroupMembers current : members) {
+                    currentDict.put("name", current.getName());
+                    currentDict.put("username", current.getUsername());
+                    currentDict.put("email", current.getEmail());
+                    currentDict.put("uid", current.getUid());
+                    currentDict.put("joined", false);
+                    currentDict.put("admin", false);
+
+                    if (Objects.equals(selected.getUid(), currentUserID)) {
+                        currentDict.put("joined", true);
+                        currentDict.put("admin", true);
+                    }
+
+                    Map<String, Object> childUpdates = new HashMap<>();
+                    childUpdates.put(currentUser, currentDict);
+                    databaseReference.updateChildren(childUpdates);
+                }
             }
-            //Todo : Admin!
         }
     }
 
@@ -294,6 +303,4 @@ public class GroupActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

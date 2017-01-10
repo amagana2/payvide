@@ -55,6 +55,8 @@
         </activity>
         <activity android:name=".GroupInviteActivity">
         </activity>
+        <activity android:name=".TestActivity">
+        </activity>
     </application>
 
 </manifest>

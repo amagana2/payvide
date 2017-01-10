@@ -1,11 +1,13 @@
 package maganacode.payvide.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by Andrew on 12/23/2016.
  * Group Members that have been selected.
  */
 
-public class GroupMembers {
+public class GroupMembers implements Serializable {
     private String name;
     private String username;
     private String email;

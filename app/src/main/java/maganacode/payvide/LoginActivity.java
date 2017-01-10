@@ -193,7 +193,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-        mLoginButton.setEnabled(false);
+        mLoginButton.setEnabled(true);
     }
 
     //Validates user according to criteria
