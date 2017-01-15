@@ -78,7 +78,6 @@ public class PaymentsSearchActivity extends AppCompatActivity implements SearchV
         //Child Listener
         childListeners();
 
-
         //NewActivity
         mCreate.setOnClickListener(new View.OnClickListener() {
             @Override

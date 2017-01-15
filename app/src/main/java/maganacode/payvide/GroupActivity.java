@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -56,6 +55,7 @@ public class GroupActivity extends AppCompatActivity {
     private List<UserList> selectedUsers = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
     private GroupActivityAdapter mAdapter;
+    private DatabaseReference mRef;
 
     //Butterknife Injections
     @Bind(R.id.toolbar)
@@ -78,7 +78,7 @@ public class GroupActivity extends AppCompatActivity {
     TextView mAddButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
         ButterKnife.bind(this);
@@ -89,31 +89,41 @@ public class GroupActivity extends AppCompatActivity {
             Group loadGroups = (Group) savedInstanceState.getSerializable("Groups");
             groups.add(loadGroups);
             mAdapter.notifyDataSetChanged();
-
         }
 
         //Users from selected list -- NEW DATA
         selectedUsers = (List<UserList>) getIntent().getSerializableExtra("users");
         groupName = getIntent().getStringExtra("groupName");
 
-        selectedGroup = new Group(mGroupMembers, groupName, UID);
-        groups.add(selectedGroup);
-
         //Current User
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users");
-        DatabaseReference newRef = mRef.child(currentUserID);
+        
+        mRef = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference newRef = mRef.child(currentUserID); //currentUserID
         newRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "Name: " + dataSnapshot.child("name").getValue());
+
                 UserList user = dataSnapshot.getValue(UserList.class);
+
+                selectedGroup = new Group(mGroupMembers, groupName, UID);
+                groups.add(selectedGroup);
 
                 //If the current user...
                 if (Objects.equals(user.getUid(), currentUserID)) {
                     selectedUsers.add(user);
-
                     //Picked user.
+                    for (UserList selected : selectedUsers) {
+                        GroupMembers selectedMember = new GroupMembers();
+
+                        selectedMember.setName(selected.getName());
+                        selectedMember.setUsername(selected.getUsername());
+                        selectedMember.setEmail(selected.getEmail());
+                        selectedMember.setUid(selected.getUid());
+
+                        mGroupMembers.add(selectedMember);
+                    }
+                } else {
                     for (UserList selected : selectedUsers) {
                         GroupMembers selectedMember = new GroupMembers();
 
@@ -134,6 +144,7 @@ public class GroupActivity extends AppCompatActivity {
 
                 //Todo : Write current user + admin to Firebase.
                 writeNewGroup(mGroupMembers, groupName);
+
             }
 
             @Override
@@ -141,6 +152,7 @@ public class GroupActivity extends AppCompatActivity {
 
             }
         });
+
 
         //OnClick RecyclerView
         mRecyclerview.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
@@ -221,11 +233,20 @@ public class GroupActivity extends AppCompatActivity {
 
         for (GroupMembers selected : members) {
             String selectedID = selected.getUid();
+
             //Non Admin Members
             if (!Objects.equals(selectedID, currentUser)) {
-
                 Map<String, Object> childUpdates = new HashMap<>();
-                ref.child("users").child(selectedID).child("invites").child(uniqueKey).setValue(groupNameAndID);
+                ref.child("users").child(selectedID).child("invites")
+                        .child(uniqueKey)
+                        .setValue(groupNameAndID);
+
+                //Member's Reference
+                DatabaseReference mDatabaseRefMemb = database.getReference("users")
+                        .child(selectedID)
+                        .child("invites")
+                        .child(uniqueKey)
+                        .child("members");
 
                 //How 'members' will look.
                 for (GroupMembers picked : members) {
@@ -236,26 +257,19 @@ public class GroupActivity extends AppCompatActivity {
                     pickedDict.put("joined", false);
                     pickedDict.put("admin", false);
 
-                    Log.d(TAG, "Picked: " + picked.getName());
-
                     if (Objects.equals(picked.getUid(), currentUserID)) {
                         pickedDict.put("joined", true);
                         pickedDict.put("admin", true);
                     }
 
-                    //Where in the DB should "Group" be created?
-                    //TODO: Members Reference
-                    //Member's Reference
-                    DatabaseReference mDatabaseRefMemb = database.getReference("users")
-                            .child(selectedID).child("invites").child(uniqueKey).child("members");
+                    //Sets the picked map.
                     childUpdates.put(picked.getUid(), pickedDict);
-                    mDatabaseRefMemb.updateChildren(childUpdates);
                 }
+                mDatabaseRefMemb.updateChildren(childUpdates);
             } else {
 
                 //Current User
                 ref.child("users").child(selectedID).child("groups").child(uniqueKey).setValue(groupNameAndID);
-
                 for (GroupMembers current : members) {
                     currentDict.put("name", current.getName());
                     currentDict.put("username", current.getUsername());
